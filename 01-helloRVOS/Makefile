@@ -5,6 +5,7 @@ SRCS_ASM = \
 
 SRCS_C = \
 	kernel.c \
+	uart.c \
 
 OBJS = $(SRCS_ASM:.S=.o)
 OBJS += $(SRCS_C:.c=.o)
@@ -23,7 +24,6 @@ os.elf: ${OBJS}
 %.o : %.S
 	${CC} ${CFLAGS} -c -o $@ $<
 
-.PHONY : run
 run: all
 	@echo "------------------------"
 	@echo "Running RVOS on nemu-zig"
