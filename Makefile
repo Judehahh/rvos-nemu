@@ -10,7 +10,11 @@ CC = ${CROSS_COMPILE}gcc
 OBJCOPY = ${CROSS_COMPILE}objcopy
 OBJDUMP = ${CROSS_COMPILE}objdump
 
-SRCS_ASM = $(shell find src/ -name "*.S")
+SRCS_ASM = \
+	src/start.S \
+	src/mem.S \
+	src/entry.S
+
 SRCS_C = $(shell find src/ -name "*.c")
 
 LINKER_SCRIPT = src/os.ld
