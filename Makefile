@@ -11,8 +11,9 @@ OBJCOPY = ${CROSS_COMPILE}objcopy
 OBJDUMP = ${CROSS_COMPILE}objdump
 
 SRCS_ASM = $(shell find src/ -name "*.S")
-
 SRCS_C = $(shell find src/ -name "*.c")
+
+LINKER_SCRIPT = src/os.ld
 
 OBJS = $(SRCS_ASM:.S=.o)
 OBJS += $(SRCS_C:.c=.o)
@@ -22,7 +23,7 @@ all: os.elf
 
 # start.o must be the first in dependency!
 os.elf: ${OBJS}
-	${CC} ${CFLAGS} -Ttext=0x80000000 -o os.elf $^
+	${CC} ${CFLAGS} -T ${LINKER_SCRIPT} -o os.elf $^
 	${OBJCOPY} -O binary os.elf os.bin
 
 %.o : %.c
