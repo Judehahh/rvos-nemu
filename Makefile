@@ -1,10 +1,18 @@
-include ../common.mk
+ifneq ($(shell which riscv64-unknown-elf-gcc 2>/dev/null),)
+	CROSS_COMPILE := riscv64-unknown-elf-
+else
+	CROSS_COMPILE := riscv64-elf-
+endif
 
-SRCS_ASM = \
-	start.S \
+CFLAGS = -nostdlib -fno-builtin -march=rv32im_zicsr -mabi=ilp32 -g -Wall
 
-SRCS_C = \
-	kernel.c \
+CC = ${CROSS_COMPILE}gcc
+OBJCOPY = ${CROSS_COMPILE}objcopy
+OBJDUMP = ${CROSS_COMPILE}objdump
+
+SRCS_ASM = $(shell find src/ -name "*.S")
+
+SRCS_C = $(shell find src/ -name "*.c")
 
 OBJS = $(SRCS_ASM:.S=.o)
 OBJS += $(SRCS_C:.c=.o)
@@ -23,7 +31,6 @@ os.elf: ${OBJS}
 %.o : %.S
 	${CC} ${CFLAGS} -c -o $@ $<
 
-.PHONY : run
 run: all
 	@echo "------------------------"
 	@echo "Running RVOS on nemu-zig"
@@ -43,4 +50,4 @@ code: all
 
 .PHONY : clean
 clean:
-	rm -rf *.o *.bin *.elf
+	rm -rf src/*.o *.bin *.elf
